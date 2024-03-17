@@ -10,6 +10,5 @@ export class WalletService implements OnModuleInit {
     async onModuleInit() {
         const seed = await mnemonicToSeed(appConfig().mnemonic)
         this.hdKey = HDKey.fromMasterSeed(seed)
-        console.log(this.hdKey)
     }
 }

@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig } from './config/app.config';
 import { WalletService } from './services/wallet.service';
+import { IPFSService } from './services/ipfs.service';
+import { NftContractService } from './services/nft/nft-contract.service';
 
 @Module({
   imports: [
@@ -15,6 +17,6 @@ import { WalletService } from './services/wallet.service';
 
   ],
   controllers: [AppController],
-  providers: [AppService, WalletService],
+  providers: [AppService, WalletService, IPFSService, NftContractService],
 })
 export class AppModule {}

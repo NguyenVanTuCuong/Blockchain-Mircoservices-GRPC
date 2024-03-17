@@ -9,8 +9,9 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
+        url: "localhost:5001",
         package: 'nft',
-        protoPath: join(process.cwd(), "proto", 'nft.proto'),
+        protoPath: join(process.cwd(), "protos", 'nft.proto'),
       },
     },
   );
