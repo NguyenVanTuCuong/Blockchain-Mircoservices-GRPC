@@ -25,8 +25,10 @@ export class NftContractService implements OnModuleInit {
   @GrpcMethod("NftService", "MintNft")
   async mintNft(request: MintNftRequest) {
     const cid = await this.ipfsService.getCid(request)
+    console.log(cid)
     const data = this.contract.methods.mint(request.to , cid).encodeABI()
     var transaction = await this.account.signTransaction({
+      from: this.account.address,
       data,
       gasPrice: GAS_PRICE,
       gasLimit: GAS_LIMIT

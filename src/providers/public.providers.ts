@@ -10,7 +10,7 @@ export const getHttpWeb3 = (
             }
         } : undefined
     
-    const provider = new HttpProvider("http://localhost:5001"
+    const provider = new HttpProvider("https://api.baobab.klaytn.net:8651"
     , providerOptions)
     return new Web3(provider)
 }

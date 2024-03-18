@@ -16,7 +16,7 @@ import { NftContractService } from './services/nft/nft-contract.service';
   }),
 
   ],
-  controllers: [AppController],
+  controllers: [AppController, NftContractService],
   providers: [AppService, WalletService, IPFSService, NftContractService],
 })
 export class AppModule {}

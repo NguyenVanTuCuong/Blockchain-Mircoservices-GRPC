@@ -2,6 +2,8 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { appConfig } from 'src/config/app.config';
 import PinataSDK from '@pinata/sdk';
 import { Address } from 'web3';
+import { randomUUID } from 'crypto';
+import { Readable } from 'stream';
 
 @Injectable()
 export class IPFSService implements OnModuleInit {
@@ -16,11 +18,21 @@ export class IPFSService implements OnModuleInit {
   }
 
   async getCid(request: MintNftRequest) {
-    const { IpfsHash } = await this.pinata.pinFileToIPFS(request.imageBytes);
+    const { IpfsHash } = await this.pinata.pinFileToIPFS(
+      Readable.from(request.imageBytes)
+      , {
+      pinataMetadata: {
+        name: randomUUID()
+      }
+    });
     const { IpfsHash: result } = await this.pinata.pinJSONToIPFS({
       title: request.title,
       description: request.description,
       imageCid: IpfsHash,
+    }, {
+      pinataMetadata: {
+        name: randomUUID()
+      }
     });
     return result;
   }
