@@ -18,6 +18,7 @@ export class IPFSService implements OnModuleInit {
   }
 
   async getCid(request: MintNftRequest) {
+    console.log(request)
     const { IpfsHash } = await this.pinata.pinFileToIPFS(
       Readable.from(request.imageBytes)
       , {
@@ -26,7 +27,7 @@ export class IPFSService implements OnModuleInit {
       }
     });
     const { IpfsHash: result } = await this.pinata.pinJSONToIPFS({
-      title: request.title,
+      name: request.name,
       description: request.description,
       imageCid: IpfsHash,
     }, {
@@ -39,8 +40,12 @@ export class IPFSService implements OnModuleInit {
 }
 
 export interface MintNftRequest {
-  title: string;
+  name: string;
   description: string;
   to: Address;
   imageBytes: Buffer;
+}
+
+export interface BurnNftRequest {
+  tokenId: string;
 }

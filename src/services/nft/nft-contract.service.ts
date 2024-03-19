@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { appConfig } from 'src/config/app.config';
 import Web3, { Contract } from 'web3';
 import abi from './abi';
-import { IPFSService, MintNftRequest } from '../ipfs.service';
+import { BurnNftRequest, IPFSService, MintNftRequest } from '../ipfs.service';
 import { WalletService } from '../wallet.service';
 import { getHttpWeb3 } from 'src/providers';
 import { Web3Account } from "web3-eth-accounts"
@@ -25,19 +25,38 @@ export class NftContractService implements OnModuleInit {
   @GrpcMethod("NftService", "MintNft")
   async mintNft(request: MintNftRequest) {
     const cid = await this.ipfsService.getCid(request)
-    console.log(cid)
-    const data = this.contract.methods.mint(request.to , cid).encodeABI()
+    const data = this.contract.methods.mint(request.to, cid).encodeABI()
     var transaction = await this.account.signTransaction({
       from: this.account.address,
+      to: appConfig().nft,
       data,
       gasPrice: GAS_PRICE,
-      gasLimit: GAS_LIMIT
+      gasLimit: GAS_LIMIT,
     })
+    const web3 = getHttpWeb3()
+    const receipt = await web3.eth.sendSignedTransaction(transaction.rawTransaction)
     return {
-      transactionHash: transaction.transactionHash
+      transactionHash: receipt.transactionHash
+    }
+  }
+
+  @GrpcMethod("NftService", "BurnNft")
+  async burnNft(request: BurnNftRequest) {
+    const data = this.contract.methods.burn(request.tokenId).encodeABI()
+    var transaction = await this.account.signTransaction({
+      from: this.account.address,
+      to: appConfig().nft,
+      data,
+      gasPrice: GAS_PRICE,
+      gasLimit: GAS_LIMIT,
+    })
+    const web3 = getHttpWeb3()
+    const receipt = await web3.eth.sendSignedTransaction(transaction.rawTransaction)
+    return {
+      transactionHash: receipt.transactionHash
     }
   }
 }
 
 export const GAS_PRICE = Web3.utils.toWei(25, "gwei")
-export const GAS_LIMIT = "30000000"
+export const GAS_LIMIT = "3000000"
