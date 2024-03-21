@@ -7,20 +7,28 @@ service NftService {
 }
 
 message MintNftRequest {
-	string name = 1;
-	string description = 2;
-	bytes imageBytes = 3;
-	string to = 4;
+	string orchidId = 1;
+	string name = 2;
+	string description = 3;
+	bytes imageBytes = 4;
+	string to = 5;
+	string color = 6;
+	string species = 7;
+	string origin = 8;
+	int64 createdAt = 9;
+	int64 updatedAt = 10;
 }
 
 message MintNftResponse {
 	string transactionHash = 1;
 }
 
+
 message BurnNftRequest {
 	int32 tokenId = 1;
 }
 
 message BurnNftResponse {
-	string transactionHash = 1;
+	string orchidId = 1;
+	string transactionHash = 2;
 }

@@ -7,6 +7,7 @@ import { WalletService } from '../wallet.service';
 import { getHttpWeb3 } from 'src/providers';
 import { Web3Account } from "web3-eth-accounts"
 import { GrpcMethod } from '@nestjs/microservices';
+import axios from 'axios';
 
 @Injectable()
 export class NftContractService implements OnModuleInit {
@@ -42,6 +43,11 @@ export class NftContractService implements OnModuleInit {
 
   @GrpcMethod("NftService", "BurnNft")
   async burnNft(request: BurnNftRequest) {
+    console.log(request)
+    const uri = await this.contract.methods._tokenURIs(request.tokenId).call()
+    const _data = (await axios.get(`https://ipfs.io/ipfs/${uri}`)).data
+    const orchidId = _data.orchidId
+
     const data = this.contract.methods.burn(request.tokenId).encodeABI()
     var transaction = await this.account.signTransaction({
       from: this.account.address,
@@ -53,6 +59,7 @@ export class NftContractService implements OnModuleInit {
     const web3 = getHttpWeb3()
     const receipt = await web3.eth.sendSignedTransaction(transaction.rawTransaction)
     return {
+      orchidId,
       transactionHash: receipt.transactionHash
     }
   }

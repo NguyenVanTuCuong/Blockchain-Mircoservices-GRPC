@@ -27,9 +27,15 @@ export class IPFSService implements OnModuleInit {
       }
     });
     const { IpfsHash: result } = await this.pinata.pinJSONToIPFS({
+      orchidId: request.orchidId,
       name: request.name,
       description: request.description,
       imageCid: IpfsHash,
+      color : request.color,
+      createAt: new Date(request.createdAt),
+      updatedAt: new Date(request.updatedAt),
+      origin : request.origin,
+      species : request.species
     }, {
       pinataMetadata: {
         name: randomUUID()
@@ -40,12 +46,18 @@ export class IPFSService implements OnModuleInit {
 }
 
 export interface MintNftRequest {
+  orchidId: string;
   name: string;
   description: string;
   to: Address;
   imageBytes: Buffer;
+  color: string;
+	species: string;
+	origin: string;
+	createdAt: number;
+	updatedAt: number;
 }
 
 export interface BurnNftRequest {
-  tokenId: string;
+  tokenId: number;
 }
